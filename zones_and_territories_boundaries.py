@@ -20,8 +20,19 @@ def make_list_for_mif_actual_land(file_name):
     zones_and_territories_records = tree.findall('cadastral_blocks/cadastral_block/zones_and_territories_boundaries/zones_and_territories_record')
     for zones_and_territories_record in zones_and_territories_records:
         #  ---------------------------возвращает список контуров в каждом участке----------------------------
+
         spatal_elements = zones_and_territories_record.findall("./b_contours_location/contours/contour/entity_spatial/"
                                               "spatials_elements/spatial_element")
+        #-----------------------------исключаем повторы зон----------------------------------
+        data = zones_and_territories_record.findall('./b_object_zones_and_territories/b_object/reg_numb_border')
+        for reg_numb_border in data:
+            _reg_numb_border = reg_numb_border.text
+            # if _reg_numb_border not in list_reg_number:
+            #     print(_reg_numb_border)
+            list_reg_number.append(_reg_numb_border)
+            print(list_reg_number)
+
+        #-------------------------------проверяем наличие координат----------------------------------#
         if len(spatal_elements) > 0:
             list_land.append("Region ")
             list_land.append(len(spatal_elements))
@@ -35,6 +46,7 @@ def make_list_for_mif_actual_land(file_name):
                     x = ordinate.find('x').text
                     list_land.append(y)
                     list_land.append(x)
+    print(list_reg_number)
     return list_land
 
 
